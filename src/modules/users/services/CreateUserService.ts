@@ -1,4 +1,5 @@
 import { IUserRepository } from "../interfaces/IUserRepository";
+import bcrypt from "bcrypt";
 
 export class CreateUserService {
 
@@ -14,13 +15,19 @@ export class CreateUserService {
       throw new Error("Usuário já existe");
     }
 
+    const senhaHash = await bcrypt.hash(senha_hash, 10);
+
     const user = await this.userRepository.create({
         nome,
         email,
-        senha_hash,
+        senha_hash: senhaHash,
       });
 
-    return user;
+    return {
+      id: user.id,
+      nome: user.nome,
+      email: user.email,
+    };
   }
 
 }
