@@ -9,16 +9,5 @@ export async function usersRoutes(app: FastifyInstance) {
 
   app.post("/users", userController.create);
   app.post("/sessions", authenticateUserController.authenticate);
-
-  app.get(
-    "/profile",
-    {
-      preHandler: ensureAuthenticated,
-    },
-    async () => {
-      return {
-        message: "Você está autenticado",
-      };
-    }
-  );
+  app.get("/profile",{preHandler: ensureAuthenticated,},async () => {return {message: "Você está autenticado",};});
 }
