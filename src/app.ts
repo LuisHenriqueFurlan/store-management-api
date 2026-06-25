@@ -6,6 +6,7 @@ import { brandsRoutes } from "./modules/brands/routes/brandsRoutes";
 import { productVariationRoutes } from "./modules/productVariations/routes/productVariationRoutes";
 import { salesRoutes } from "./modules/sales/routes/salesRoutes";
 import { saleItemsRoutes } from "./modules/saleItems/routes/salesItemsRoutes";
+import { paymentsRoutes } from "./modules/payments/routes/paymentsRoutes";
 
 export const app = Fastify({
   logger: true,
@@ -19,3 +20,4 @@ app.register(brandsRoutes);
 app.register(productVariationRoutes);
 app.register(salesRoutes);
 app.register(saleItemsRoutes);
+app.register(paymentsRoutes);
