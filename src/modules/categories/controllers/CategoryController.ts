@@ -4,18 +4,18 @@ import { CreateCategoryService } from "../services/CreateCategoryService";
 import { ListCategoriesService } from "../services/ListCategoriesService";
 import { DeleteCategoryService } from "../services/DeleteCategoryService";
 import { FindCategoryByIdService } from "../services/FindCategoryByIdService";
+import { createCategorySchema } from "../schemas/CreateCategorySchema";
+import { categoryIdSchema } from "../schemas/CategoryIdSchema";
 
 
 export class CategoryController {
     async create(request: FastifyRequest, reply: FastifyReply) {
-        const { nome } = request.body as {
-            nome: string;
-        };
+        const data = createCategorySchema.parse(request.body);
 
         const repository = new CategoryRepository();
         const service = new CreateCategoryService(repository);
 
-        const category = await service.execute(nome);
+        const category = await service.execute(data.nome);
 
         return reply.status(201).send(category);
     }
@@ -31,9 +31,7 @@ export class CategoryController {
     }
 
     async delete(request: FastifyRequest, reply:FastifyReply) {
-        const { id } = request.params as {
-            id: string;
-        }
+        const { id } = categoryIdSchema.parse(request.params);
 
         const repository = new CategoryRepository();
         const service = new DeleteCategoryService(repository);
@@ -44,9 +42,7 @@ export class CategoryController {
     }
 
     async findById(request: FastifyRequest, reply: FastifyReply) {
-        const { id } = request.params as {
-            id: string;
-        }
+        const { id } = categoryIdSchema.parse(request.params);
 
         const repository = new CategoryRepository();
         const service = new FindCategoryByIdService(repository);

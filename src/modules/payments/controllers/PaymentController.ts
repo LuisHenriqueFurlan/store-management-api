@@ -5,31 +5,24 @@ import { ListPaymentsService } from "../services/ListPaymentsService";
 import { FindPaymentByIdService } from "../services/FindPaymentByIdService";
 import { UpdatePaymentService } from "../services/UpdatePaymentService";
 import { DeletePaymentService } from "../services/DeletePaymentService";
+import { createPaymentSchema } from "../schemas/CreatePaymentSchema";
+import { updatePaymentSchema } from "../schemas/UpdatePaymentSchema";
+import { paymentIdSchema } from "../schemas/PaymentIdSchema";
 
 export class PaymentController {
 
     async create(request: FastifyRequest, reply: FastifyReply) {
 
-        const {
-            venda_id,
-            forma_pagamento,
-            valor,
-            parcelas
-        } = request.body as {
-            venda_id: string;
-            forma_pagamento: string;
-            valor: number;
-            parcelas: number;
-        };
+        const data = createPaymentSchema.parse(request.body);
 
         const repository = new PaymentRepository();
         const service = new CreatePaymentService(repository);
 
         const payment = await service.execute(
-            venda_id,
-            forma_pagamento,
-            valor,
-            parcelas
+            data.venda_id,
+            data.forma_pagamento,
+            data.valor,
+            data.parcelas
         );
 
         return reply.status(201).send(payment);
@@ -47,9 +40,7 @@ export class PaymentController {
 
     async findById(request: FastifyRequest, reply: FastifyReply) {
 
-        const { id } = request.params as {
-            id: string;
-        };
+        const { id } = paymentIdSchema.parse(request.params);
 
         const repository = new PaymentRepository();
         const service = new FindPaymentByIdService(repository);
@@ -61,28 +52,18 @@ export class PaymentController {
 
     async update(request: FastifyRequest, reply: FastifyReply) {
 
-        const { id } = request.params as {
-            id: string;
-        };
+        const { id } = paymentIdSchema.parse(request.params);
 
-        const {
-            forma_pagamento,
-            valor,
-            parcelas
-        } = request.body as {
-            forma_pagamento: string;
-            valor: number;
-            parcelas: number;
-        };
+        const data = updatePaymentSchema.parse(request.body);
 
         const repository = new PaymentRepository();
         const service = new UpdatePaymentService(repository);
 
         const payment = await service.execute(
             id,
-            forma_pagamento,
-            valor,
-            parcelas
+            data.forma_pagamento,
+            data.valor,
+            data.parcelas
         );
 
         return reply.send(payment);
@@ -90,9 +71,7 @@ export class PaymentController {
 
     async delete(request: FastifyRequest, reply: FastifyReply) {
 
-        const { id } = request.params as {
-            id: string;
-        };
+        const { id } = paymentIdSchema.parse(request.params);
 
         const repository = new PaymentRepository();
         const service = new DeletePaymentService(repository);

@@ -5,16 +5,25 @@ import { ListProductVariationsService } from "../services/ListProductVariationsS
 import { FindProductVariationByIdService } from "../services/FindProductVariationByIdService";
 import { UpdateProductVariationService } from "../services/UpdateProductVariationService";
 import { DeleteProductVariationService } from "../services/DeleteProductVariationService";
+import { createProductVariationSchema } from "../schemas/CreateProductVariationSchema";
+import { updateProductVariationSchema } from "../schemas/UpdateProductVariationSchema";
+import { productVariationIdSchema } from "../schemas/ProductVariationIdSchema";
 
 
 export class ProductVariationController {
     async create(request: FastifyRequest, reply: FastifyReply) {
-        const { produto_id, tamanho, quantidade_estoque, estoque_minimo } = request.body as {produto_id: string,tamanho: string,quantidade_estoque: number,estoque_minimo: number}
+        const data = createProductVariationSchema.parse(request.body);
         
         const repository = new ProductVariationRepository();
         const service = new CreateProductVariationService(repository);
 
-        const productVariation = await service.execute(produto_id, tamanho, quantidade_estoque, estoque_minimo);
+        const productVariation = await service.execute(
+            data.produto_id,
+            data.tamanho,
+            data.quantidade_estoque,
+            data.estoque_minimo
+            
+        );
 
         return reply.status(201).send(productVariation);
 
@@ -30,7 +39,7 @@ export class ProductVariationController {
     }
 
     async findById(request: FastifyRequest, reply: FastifyReply) {
-        const { id } = request.params as { id: string };
+        const { id } = productVariationIdSchema.parse(request.params);
 
         const repository = new ProductVariationRepository();
         const service = new FindProductVariationByIdService(repository);
@@ -42,33 +51,24 @@ export class ProductVariationController {
 
 
     async update(request: FastifyRequest, reply: FastifyReply) {
-        const { id } = request.params as { id: string };
-
-        const {
-            tamanho,
-            quantidade_estoque,
-            estoque_minimo
-        } = request.body as {
-            tamanho: string;
-            quantidade_estoque: number;
-            estoque_minimo: number;
-        };
+        const { id } = productVariationIdSchema.parse(request.params);
+        const data = updateProductVariationSchema.parse(request.body);
 
         const repository = new ProductVariationRepository();
         const service = new UpdateProductVariationService(repository);
 
         const variation = await service.execute(
             id,
-            tamanho,
-            quantidade_estoque,
-            estoque_minimo
+            data.tamanho,
+            data.quantidade_estoque,
+            data.estoque_minimo
         );
 
         return reply.send(variation);
     }
 
     async delete(request: FastifyRequest, reply: FastifyReply) {
-        const { id } = request.params as { id: string };
+        const { id } = productVariationIdSchema.parse(request.params);
 
         const repository = new ProductVariationRepository();
         const service = new DeleteProductVariationService(repository);

@@ -5,18 +5,29 @@ import { ListProductsService } from "../services/ListProductsService";
 import { FindProductByIdService } from "../services/FindProductByIdService";
 import { DeleteProductService } from "../services/DeleteProductService";
 import { UpdateProductService } from "../services/UpdateProductService";
+import { createProductSchema } from "../schemas/CreateProductSchema";
+import { updateProductSchema } from "../schemas/UpdateProductSchema";
+import { productIdSchema } from "../schemas/ProductIdSchema";
+
+
+
 
 export class ProductController {
 
     async create(request: FastifyRequest, reply: FastifyReply) {
 
-        const { nome, descricao, preco, categoria_id, marca_id } = request.body as
-        { nome: string; descricao: string | null; preco: number; categoria_id: string; marca_id: string;};
+        const data = createProductSchema.parse(request.body);
         
         const repository = new ProductRepository();
         const service = new CreateProductService(repository);
 
-        const product = await service.execute( nome, descricao, preco, categoria_id, marca_id);
+        const product = await service.execute(
+            data.nome,
+            data.descricao,
+            data.preco,
+            data.categoria_id,
+            data.marca_id
+        );
 
         return reply.status(201).send(product);
     }
@@ -32,7 +43,7 @@ export class ProductController {
     }
 
     async findById(request: FastifyRequest, reply: FastifyReply) {
-        const { id } = request.params as { id: string };
+        const { id } = productIdSchema.parse(request.params);        
 
         const repository = new ProductRepository();
         const service = new FindProductByIdService(repository);
@@ -43,7 +54,7 @@ export class ProductController {
     }
 
     async delete(request: FastifyRequest, reply: FastifyReply) {
-        const { id } = request.params as { id: string; };
+        const { id } = productIdSchema.parse(request.params);
 
         const repository = new ProductRepository();
         const service = new DeleteProductService(repository);
@@ -54,32 +65,20 @@ export class ProductController {
     }
 
     async update(request: FastifyRequest, reply: FastifyReply) {
-        const { id } = request.params as { id: string; };
+        const { id } = productIdSchema.parse(request.params);
 
-        const {
-            nome,
-            descricao,
-            preco,
-            categoria_id,
-            marca_id,
-        } = request.body as {
-            nome: string;
-            descricao: string | null,
-            preco: number;
-            categoria_id: string;
-            marca_id: string;
-        };
+        const data = updateProductSchema.parse(request.body);
 
         const repository = new ProductRepository();
         const service = new UpdateProductService(repository);
 
         const product = await service.execute(
             id,
-            nome,
-            descricao,
-            preco,
-            categoria_id,
-            marca_id
+            data.nome,
+            data.descricao,
+            data.preco,
+            data.categoria_id,
+            data.marca_id    
         );  
 
         return reply.send(product);

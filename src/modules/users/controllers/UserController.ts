@@ -1,16 +1,14 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { UserRepository } from "../repositories/UserRepository";
 import { CreateUserService } from "../services/CreateUserService";
+import { createUserSchema } from "../schemas/CreateUserSchema";
+
 
 export class UserController {
 
   async create(request: FastifyRequest, reply: FastifyReply) {
 
-    const { nome, email, senha_hash } = request.body as {
-      nome: string;
-      email: string;
-      senha_hash: string;
-    };
+    const data = createUserSchema.parse(request.body);
 
     const repository = new UserRepository();
 
@@ -19,9 +17,9 @@ export class UserController {
     );
 
     const user = await service.execute(
-      nome,
-      email,
-      senha_hash
+      data.nome,
+      data.email,
+      data.senha
     );
 
     return reply.status(201).send(user);

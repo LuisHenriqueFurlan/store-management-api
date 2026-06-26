@@ -5,16 +5,21 @@ import { ListBrandService } from "../services/ListBrandsByIdService";
 import { FindBrandByIdService } from "../services/FindBrandByIdService";
 import { UpdateBrandService } from "../services/UpdateBrandService";
 import { DeleteBrandService } from "../services/DeleteBrandService";
+import { createBrandSchema } from "../schemas/CreateBrandSchema";
+import { updateBrandSchema } from "../schemas/UpdateBrandSchema";
+import { brandIdSchema } from "../schemas/BrandIdSchema";
+import { da } from "zod/locales";
+
 
 
 export class BrandController {
     async create(request: FastifyRequest, reply: FastifyReply) {
-        const { nome } = request.body as { nome:string; };
+        const data = createBrandSchema.parse(request.body);
 
         const repository = new BrandRepository();
         const service = new CreateBrandService(repository);
 
-        const brand = await service.execute(nome);
+        const brand = await service.execute(data.nome);
 
         return reply.status(201).send(brand);
         
@@ -33,7 +38,7 @@ export class BrandController {
 
     async findById(request: FastifyRequest, reply: FastifyReply) {
 
-    const { id } = request.params as {id: string;};
+    const { id } = brandIdSchema.parse(request.params);
 
     const repository = new BrandRepository();
     const service = new FindBrandByIdService(repository);
@@ -46,14 +51,14 @@ export class BrandController {
 
     async update(request: FastifyRequest, reply: FastifyReply) {
 
-    const { id } = request.params as {id: string;};
+    const { id } = brandIdSchema.parse(request.params);
 
-    const { nome } = request.body as {nome: string;};
+    const data = updateBrandSchema.parse(request.body);
 
     const repository = new BrandRepository();
     const service = new UpdateBrandService(repository);
 
-    const brand = await service.execute(id, nome);
+    const brand = await service.execute(id, data.nome);
 
     return reply.send(brand);
 
@@ -61,7 +66,7 @@ export class BrandController {
 
     async delete(request: FastifyRequest, reply: FastifyReply) {
 
-    const { id } = request.params as {id: string;};
+    const { id } = brandIdSchema.parse(request.params);
 
     const repository = new BrandRepository();
     const service = new DeleteBrandService(repository);

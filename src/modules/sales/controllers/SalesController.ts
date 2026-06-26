@@ -3,27 +3,22 @@ import { SalesRepository } from "../repositories/salesRepository";
 import { CreateSaleService } from "../services/CreateSaleService";
 import { ListSalesService } from "../services/ListSalesService";
 import { FindSaleByIdService } from "../services/FindSaleByIdService";
-
+import { createSaleSchema } from "../schemas/CreateSaleSchema";
+import { saleIdSchema } from "../schemas/SaleIdSchema";
 
 export class SalesController {
     async create(request: FastifyRequest, reply: FastifyReply) {
-        const { usuario_id,valor_bruto,valor_desconto,valor_final,status } = request.body as {
-            usuario_id:string,
-            valor_bruto:number,
-            valor_desconto:number,
-            valor_final:number,
-            status:string,
-        }
+        const data = createSaleSchema.parse(request.body);
 
         const repository = new SalesRepository();
         const service = new CreateSaleService(repository);
 
         const venda = await service.execute(
-            usuario_id,
-            valor_bruto,
-            valor_desconto,
-            valor_final,
-            status
+          data.usuario_id,
+          data.valor_bruto,
+          data.valor_desconto,
+          data.valor_final,
+          data.status
         );
 
         return reply.status(201).send(venda);
@@ -40,7 +35,7 @@ export class SalesController {
     }
 
     async findById(request: FastifyRequest, reply: FastifyReply) {
-        const { id } = request.params as { id:string };
+        const { id } = saleIdSchema.parse(request.params);
 
         const repository = new SalesRepository();
         const service = new FindSaleByIdService(repository);
