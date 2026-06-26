@@ -3,7 +3,7 @@ import { z } from "zod";
 export const createStockMovementSchema = z.object({
     produto_variacao_id: z.uuid("Variação de produto inválida."),
 
-    usuario_id: z.uuid("Usuário inválido."),
+    
 
     tipo: z.enum(
         ["ENTRADA", "SAIDA", "AJUSTE"],

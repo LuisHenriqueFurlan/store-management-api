@@ -14,7 +14,7 @@ export class SalesController {
         const service = new CreateSaleService(repository);
 
         const venda = await service.execute(
-          data.usuario_id,
+          request.user.id,
           data.valor_bruto,
           data.valor_desconto,
           data.valor_final,

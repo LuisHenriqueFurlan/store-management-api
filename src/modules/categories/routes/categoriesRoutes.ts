@@ -3,9 +3,10 @@ import { CategoryController } from "../controllers/CategoryController";
 import { ensureAuthenticated } from "../../../shared/middlewares/ensureAuthenticated";
 
 export async function categoriesRoutes(app: FastifyInstance) {
+  app.addHook("preHandler", ensureAuthenticated);
   const categoryController = new CategoryController();
-  app.post("/categories",{preHandler: ensureAuthenticated,}, categoryController.create);
-  app.get("/categories",{preHandler: ensureAuthenticated,}, categoryController.list);
-  app.delete("/categories/:id",{ preHandler: ensureAuthenticated },categoryController.delete);
-  app.get("/categories/:id",{ preHandler: ensureAuthenticated },categoryController.findById);
+  app.post("/categories", categoryController.create);
+  app.get("/categories", categoryController.list);
+  app.delete("/categories/:id",categoryController.delete);
+  app.get("/categories/:id",categoryController.findById);
 }

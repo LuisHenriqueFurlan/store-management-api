@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const createSaleSchema = z.object({
-    usuario_id: z.uuid("Usuário inválido."),
+    
 
     valor_bruto: z
         .number()

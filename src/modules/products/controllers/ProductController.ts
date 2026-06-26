@@ -33,6 +33,7 @@ export class ProductController {
     }
 
     async list(request: FastifyRequest, reply: FastifyReply) {
+        console.log(request.user);
 
         const repository = new ProductRepository();
         const service = new ListProductsService(repository);
@@ -43,6 +44,7 @@ export class ProductController {
     }
 
     async findById(request: FastifyRequest, reply: FastifyReply) {
+        
         const { id } = productIdSchema.parse(request.params);        
 
         const repository = new ProductRepository();

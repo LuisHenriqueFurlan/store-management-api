@@ -19,7 +19,7 @@ export class StockMovementController {
 
         const movement = await service.execute(
             data.produto_variacao_id,
-            data.usuario_id,
+            request.user.id,
             data.tipo,
             data.quantidade,
             data.observacao

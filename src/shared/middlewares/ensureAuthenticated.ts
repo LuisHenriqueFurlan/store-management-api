@@ -14,10 +14,16 @@ export async function ensureAuthenticated(request: FastifyRequest, reply: Fastif
     const [, token] = authHeader.split(" ");
 
     try {
-        jwt.verify(
+        const decoded = jwt.verify(
             token,
-            process.env.JWT_SECRET as string,
-        );
+            process.env.JWT_SECRET as string
+        ) as jwt.JwtPayload;
+
+        request.user = {
+            id: decoded.sub as string,
+            nome: decoded.nome as string
+        };
+        
     } catch {
         return reply.status(401).send({
             message: "Token invalido",
