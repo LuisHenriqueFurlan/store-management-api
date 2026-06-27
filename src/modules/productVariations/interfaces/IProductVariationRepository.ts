@@ -26,4 +26,14 @@ export interface IProductVariationRepository {
         tamanho: string
     ): Promise<produto_variacoes | null>;
     
+    findByIdWithProduct(id: string): Promise<any>;
+
+    decreaseStock(
+    id: string,
+    quantidade: number
+): Promise<void>;
+    increaseStock(
+        id: string,
+        quantidade: number
+    ): Promise<void>;
 }

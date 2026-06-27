@@ -9,4 +9,6 @@ export async function salesRoutes(app: FastifyInstance) {
     app.post("/sales", controller.create);
     app.get("/sales", controller.list);
     app.get("/sales/:id", controller.findById);
+    app.patch("/sales/:id/finalize", controller.finalize);
+    
 }

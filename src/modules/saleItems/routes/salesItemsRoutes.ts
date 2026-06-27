@@ -9,5 +9,6 @@ export async function saleItemsRoutes(app: FastifyInstance) {
     app.get("/sale-items", controller.list);
     app.get("/sale-items/:id", controller.findById);
     app.put("/sale-items/:id", controller.update);
+    app.patch("/sale-items/:id", controller.update);
     app.delete("/sale-items/:id", controller.delete);
 }

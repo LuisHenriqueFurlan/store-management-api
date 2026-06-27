@@ -19,13 +19,13 @@ export class SalesRepository implements ISalesRepository {
         return vendas;
     }
 
-    async create(usuario_id: string, valor_bruto: number, valor_desconto: number, valor_final: number, status: string): Promise<vendas> {
+    async create(usuario_id: string, status: string): Promise<vendas> {
         const venda = await prisma.vendas.create({
             data: {
                 usuario_id,
-                valor_bruto,
-                valor_desconto,
-                valor_final,
+                valor_bruto: 0,
+                valor_desconto: 0,
+                valor_final: 0,
                 status,
             },
             
@@ -33,6 +33,42 @@ export class SalesRepository implements ISalesRepository {
 
         return venda;
     }
+
+    async updateTotals(
+    id: string,
+    valor_bruto: number,
+    valor_desconto: number,
+    valor_final: number
+) {
+
+    return prisma.vendas.update({
+        where: {
+            id,
+        },
+        data: {
+            valor_bruto,
+            valor_desconto,
+            valor_final,
+        },
+    });
+
+}
+
+async updateStatus(
+    id: string,
+    status: string
+) {
+
+    return prisma.vendas.update({
+        where: {
+            id
+        },
+        data: {
+            status
+        }
+    });
+
+}
 
 
 }

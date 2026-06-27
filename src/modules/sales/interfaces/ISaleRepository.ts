@@ -6,10 +6,17 @@ export interface ISalesRepository {
     findAll(): Promise<vendas[]>;
     create(
         usuario_id:string,
-        valor_bruto:number,
-        valor_desconto:number,
-        valor_final:number,
         status:string,
     ): Promise<vendas>;
+    updateTotals(
+    id: string,
+    valor_bruto: number,
+    valor_desconto: number,
+    valor_final: number
+): Promise<vendas>;
+    updateStatus(
+    id: string,
+    status: string
+): Promise<vendas>;
  
 }

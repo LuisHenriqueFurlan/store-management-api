@@ -65,5 +65,57 @@ export class ProductVariationRepository implements IProductVariationRepository {
             },
         });
 
-    }    
+    }
+    
+    async findByIdWithProduct(id: string) {
+    return prisma.produto_variacoes.findUnique({
+        where: {
+            id
+        },
+        include: {
+            produtos: true
+        }
+    });
+
+    
+    
+}
+
+    async decreaseStock(
+    id: string,
+    quantidade: number
+    ): Promise<void> {
+
+    await prisma.produto_variacoes.update({
+        where: {
+            id,
+        },
+        data: {
+            quantidade_estoque: {
+                decrement: quantidade,
+            },
+        },
+    });
+
+}
+
+    async increaseStock(
+        id: string,
+        quantidade: number
+    ): Promise<void> {
+
+        await prisma.produto_variacoes.update({
+            where: {
+                id,
+            },
+            data: {
+                quantidade_estoque: {
+                    increment: quantidade,
+                },
+            },
+        });
+
+    }
+
+    
 }
