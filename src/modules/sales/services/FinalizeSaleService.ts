@@ -33,11 +33,11 @@ async execute(id: string) {
     throw new Error("Não é possível finalizar uma venda sem itens.");
     }
 
-    const updatedSale = await this.saleRepository.updateStatus(
+await this.saleRepository.updateStatus(
     id,
     "FINALIZADA"
-    );
+);
 
-    return updatedSale;
+return await this.saleRepository.findById(id);
 }
 }

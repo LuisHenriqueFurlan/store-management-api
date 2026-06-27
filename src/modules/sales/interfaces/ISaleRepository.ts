@@ -13,10 +13,10 @@ export interface ISalesRepository {
     valor_bruto: number,
     valor_desconto: number,
     valor_final: number
-): Promise<vendas>;
+): Promise<void>;
     updateStatus(
     id: string,
     status: string
-): Promise<vendas>;
- 
+): Promise<void>;
+
 }

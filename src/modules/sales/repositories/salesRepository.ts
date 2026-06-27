@@ -34,14 +34,14 @@ export class SalesRepository implements ISalesRepository {
         return venda;
     }
 
-    async updateTotals(
+async updateTotals(
     id: string,
     valor_bruto: number,
     valor_desconto: number,
     valor_final: number
-) {
+): Promise<void> {
 
-    return prisma.vendas.update({
+    await prisma.vendas.update({
         where: {
             id,
         },
@@ -57,15 +57,15 @@ export class SalesRepository implements ISalesRepository {
 async updateStatus(
     id: string,
     status: string
-) {
+): Promise<void> {
 
-    return prisma.vendas.update({
+    await prisma.vendas.update({
         where: {
-            id
+            id,
         },
         data: {
-            status
-        }
+            status,
+        },
     });
 
 }
