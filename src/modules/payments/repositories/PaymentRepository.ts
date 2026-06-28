@@ -1,4 +1,4 @@
-import { pagamentos } from "@prisma/client";
+import { pagamentos, vendas } from "@prisma/client";
 import { prisma } from "../../../shared/database/prisma";
 import { IPaymentRepository } from "../interfaces/IPaymentRepository";
 
@@ -18,6 +18,29 @@ export class PaymentRepository implements IPaymentRepository {
         const payments = await prisma.pagamentos.findMany();
 
         return payments;
+    }
+
+    async findSaleById(id: string): Promise<vendas | null> {
+        const sale = await prisma.vendas.findUnique({
+            where: {
+                id,
+            },
+        });
+
+        return sale;
+    }
+
+    async getTotalPaidForSale(venda_id: string): Promise<number> {
+        const result = await prisma.pagamentos.aggregate({
+            where: {
+                venda_id,
+            },
+            _sum: {
+                valor: true,
+            },
+        });
+
+        return Number(result._sum.valor ?? 0);
     }
 
     async create(

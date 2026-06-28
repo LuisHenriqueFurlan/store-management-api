@@ -4,7 +4,9 @@ import { CreateCategoryService } from "../services/CreateCategoryService";
 import { ListCategoriesService } from "../services/ListCategoriesService";
 import { DeleteCategoryService } from "../services/DeleteCategoryService";
 import { FindCategoryByIdService } from "../services/FindCategoryByIdService";
+import { UpdateCategoryService } from "../services/UpdateCategoryService";
 import { createCategorySchema } from "../schemas/CreateCategorySchema";
+import { updateCategorySchema } from "../schemas/UpdateCategorySchema";
 import { categoryIdSchema } from "../schemas/CategoryIdSchema";
 
 
@@ -48,6 +50,18 @@ export class CategoryController {
         const service = new FindCategoryByIdService(repository);
 
         const category = await service.execute(id);
+
+        return reply.send(category);
+    }
+
+    async update(request: FastifyRequest, reply: FastifyReply) {
+        const { id } = categoryIdSchema.parse(request.params);
+        const data = updateCategorySchema.parse(request.body);
+
+        const repository = new CategoryRepository();
+        const service = new UpdateCategoryService(repository);
+
+        const category = await service.execute(id, data.nome);
 
         return reply.send(category);
     }

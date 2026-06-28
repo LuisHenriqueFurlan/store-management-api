@@ -8,10 +8,16 @@ import { salesRoutes } from "./modules/sales/routes/salesRoutes";
 import { saleItemsRoutes } from "./modules/saleItems/routes/salesItemsRoutes";
 import { paymentsRoutes } from "./modules/payments/routes/paymentsRoutes";
 import { stockMovementsRoutes } from "./modules/stockMovements/routes/stockMovementsRoutes";
+import cors from "@fastify/cors";
 
 
 export const app = Fastify({
   logger: true,
+});
+
+app.register(cors, {
+  origin: "http://localhost:5173",
+  credentials: true,
 });
 
 
