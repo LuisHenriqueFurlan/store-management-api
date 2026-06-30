@@ -10,13 +10,17 @@ import { paymentsRoutes } from "./modules/payments/routes/paymentsRoutes";
 import { stockMovementsRoutes } from "./modules/stockMovements/routes/stockMovementsRoutes";
 import cors from "@fastify/cors";
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
 
 export const app = Fastify({
   logger: true,
 });
 
 app.register(cors, {
-  origin: "http://localhost:5173",
+  origin: allowedOrigins,
   credentials: true,
 });
 
